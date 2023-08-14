@@ -4,7 +4,7 @@ with open("C:/Users/Mustafa Yüksel/Desktop/simple_dic_parsing/deneme.xml", "r",
 root = ET.fromstring(xml_text)
 simple_dictionary = {}
 simple_dictionary["words"] = []
-entry_elements = root.findall(".//entry")
+entry_elements = root.findall(".//{http://www.tei-c.org/ns/1.0}entry")
 """
 orth_element = root.find(".//orth")
 pos_element = root.find(".//pos")
