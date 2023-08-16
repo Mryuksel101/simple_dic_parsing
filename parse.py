@@ -8,10 +8,20 @@ entry_elements = root.findall(".//{http://www.tei-c.org/ns/1.0}entry")
 index = 0
 lookedUpWords = []
 wordName = "empty"
+def getTranslationforOneMeaningWords():
+    simple_dictionary["words"][-1]["translation"] = sameWordsBox[0].find(".//{http://www.tei-c.org/ns/1.0}quote").text
+def getWordTypeForOneMeaninWords():
+    simple_dictionary["words"][-1]["type"] = sameWordsBox[0].find(".//{http://www.tei-c.org/ns/1.0}pos").text
+
+def addWordNameToMap():
+    simple_dictionary["words"][-1]["word"] = wordName
 def addLookedUpWords():
     lookedUpWords.append(wordName)
 def addPolysemanticKeyToArray():
-    simple_dictionary["words"][-1]["polysemantic"] = []
+    if wordMeaningCount==1:
+       print
+    else:
+         simple_dictionary["words"][-1]["polysemantic"] = []
 def increaseTheIndex():
     global index  # global değişkeni kullanacağımızı belirtiyoruz
     index = index + 1
@@ -20,11 +30,8 @@ def addEmtyMaptoArray():
 def getWordName(entry):
     global wordName
     wordName =  entry.find(".//{http://www.tei-c.org/ns/1.0}orth").text
-    print(wordName)
-    simple_dictionary["words"][-1]["word"] = wordName
 
 for entry in entry_elements:
-    addEmtyMaptoArray()
     getWordName(entry)
     wordMeaningCount = 0
     
@@ -33,23 +40,39 @@ for entry in entry_elements:
     bütün veriyi kontrol edip aynı isme sahip kaç tane kelime var kontrol et
     """
     if wordName not in lookedUpWords:
+        addEmtyMaptoArray()
         addLookedUpWords()
+        sameWordsBox = []
         for i in entry_elements:
-            if(wordName)== i.find(".//{http://www.tei-c.org/ns/1.0}orth").text:
+            if(wordName)== i.find(".//{http://www.tei-c.org/ns/1.0}orth").text: # kelimemeiz x diyelim. bütün datada kaç tane x var ona bakıyoruz
                 print("kelime eşleşti")
                 wordMeaningCount = wordMeaningCount + 1
-
+                sameWordsBox.append(i)
             else:
                 print("kelime işleşmedi")
+        addWordNameToMap()
+        if(wordMeaningCount==1): # kelimenin sadece bir anlamı varsa
+           getWordTypeForOneMeaninWords()
+           getTranslationforOneMeaningWords()
+           # bazen kelimenin sadece bir anlamı olsa da birden fazla fiil veya birden fazla sıfat anlamı olabilir.
+           cits = sameWordsBox[0].findall(".//{http://www.tei-c.org/ns/1.0}cit")
+           senseler = sameWordsBox[0].findall(".//{http://www.tei-c.org/ns/1.0}sense")
+
+           
+        else:
+            print
+
+
+
    
-    print(wordName + "için" + str(wordMeaningCount) + "kelime anlamı var")
 
 
-'''  increaseTheIndex()
+'''
+.findall(".//{http://www.tei-c.org/ns/1.0}sense")[0].text
 orth_element = root.find(".//{http://www.tei-c.org/ns/1.0}orth")
 pos_element = root.find(".//{http://www.tei-c.org/ns/1.0}pos")
 simple_dictionary["words"][-1]["type"] = pos_element.text
 simple_dictionary["words"][-1]["polysemantic"] = pos_element.text
 print(simple_dictionary)
 '''
-print(lookedUpWords)
+#print(simple_dictionary)
