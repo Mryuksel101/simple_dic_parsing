@@ -56,7 +56,19 @@ for entry in entry_elements:
            getTranslationforOneMeaningWords()
            # bazen kelimenin sadece bir anlamı olsa da birden fazla fiil veya birden fazla sıfat anlamı olabilir.
            cits = sameWordsBox[0].findall(".//{http://www.tei-c.org/ns/1.0}cit")
+           # cits birden fazla ise birden fazla anlam vardır
+           if 1 == len(cits):
+               print
+           else:
+               print
            senseler = sameWordsBox[0].findall(".//{http://www.tei-c.org/ns/1.0}sense")
+           # senseler dizinde işimize yarayacak olan dizideki indekler tek basamaklı sayılardır
+           # çünkü yok var yok var şeklinde gidiyor
+           sayi = 1
+           for b in senseler:
+               b.find(".//{http://www.tei-c.org/ns/1.0}def").text
+               sayi = sayi+2
+
 
            
         else:
