@@ -8,7 +8,20 @@ entry_elements = root.findall(".//{http://www.tei-c.org/ns/1.0}entry")
 index = 0
 lookedUpWords = []
 wordName = "empty"
+def addQuoteOrQuotes( quoteList : list):
+    if 1 == len(quoteList):
+        simple_dictionary["words"][-1]["transition"] = quoteList[0].text
+    else:
+        simple_dictionary["words"][-1]["transitions"] = []
+        for b in quoteList:
+            simple_dictionary["words"][-1]["transitions"].append(b.text)
 
+def addValueToDefinitions(value:str):
+    simple_dictionary["words"][-1]["definitions"][-1]["definition"] = value
+def addMapToDefinitions():
+    simple_dictionary["words"][-1]["definitions"].append({})
+def addDefinitions():
+    simple_dictionary["words"][-1]["definitions"] = []
 def addWordDefinition():
     definition = sameWordsBox[0].find(".//{http://www.tei-c.org/ns/1.0}def").text
     simple_dictionary["words"][-1]["definition"] = definition
@@ -63,23 +76,27 @@ for entry in entry_elements:
 
                 #kelimenin kaç tane çevirisi var
                 quoteBox = cits[0].findall(".//{http://www.tei-c.org/ns/1.0}quote")
-                if 1 == len(quoteBox):
-                    simple_dictionary["words"][-1]["transition"] = quoteBox[0].text
-                else:
-                    simple_dictionary["words"][-1]["transitions"] = []
-                    for b in quoteBox:
-                        simple_dictionary["words"][-1]["transitions"].append(b.text)
+                addQuoteOrQuotes(quoteBox)
 
             else:
                 senseler = sameWordsBox[0].findall(".//{http://www.tei-c.org/ns/1.0}sense")
-                # senseler kelime anlamı için lazım
-                # senseler dizinde işimize yarayacak olan dizideki indekler tek basamaklı sayılardır
+                # senseler kelime anlamı(def) için ve çeviri (quote) için lazım
+                # 0,2 gibi çift sayılarda quote'ya, 1,3 gibi tek sayılarda def'e odaklanacağız
                 # çünkü yok var yok var şeklinde gidiyor
-                sayi = 1
+                addDefinitions()
+                addMapToDefinitions()
+                sayi = 0
                 for b in senseler:
-                    b.find(".//{http://www.tei-c.org/ns/1.0}def").text
-                    sayi = sayi+2
-            
+                    if sayi % 2 == 1:
+                        definition = b.find(".//{http://www.tei-c.org/ns/1.0}def").text
+                        addValueToDefinitions(definition)
+                    else:
+                        addMapToDefinitions()
+                        quoteBox = b[sayi].findall(".//{http://www.tei-c.org/ns/1.0}quote")
+                        addQuoteOrQuotes(quoteBox)
+
+                        print("deneme")
+                    sayi = sayi + 1
 
 
            
