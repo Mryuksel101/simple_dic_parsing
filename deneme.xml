@@ -1,6 +1,54 @@
 <TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:wikdict="http://www.wikdict.com/ns/1.0">
     <text>
-       <entry>
+        <entry>
+            <form>
+                <orth>wear</orth>
+                <pron>/wɛ(ə)ɹ/</pron>
+                <pron>/wɛə(ɹ)/</pron>
+                <pron>[wɛɚ]</pron>
+                <pron>[wɛɹ]</pron>
+            </form>
+            <gramGrp>
+                <pos>n</pos>
+            </gramGrp>
+            <sense>
+                <cit type="trans" xml:lang="tr">
+                <quote>yıpranma</quote>
+                </cit>
+                <sense>
+                <def>damage</def>
+                </sense>
+            </sense>
+        </entry>
+        <entry>
+            <form>
+                <orth>wear</orth>
+                <pron>/wɛ(ə)ɹ/</pron>
+                <pron>/wɛə(ɹ)/</pron>
+                <pron>[wɛɚ]</pron>
+                <pron>[wɛɹ]</pron>
+                <form type="infl">
+                <orth>wearing</orth>
+                <orth>wears</orth>
+                <orth wikdict:show="true">wore</orth>
+                <orth wikdict:show="true">worn</orth>
+                <orth wikdict:show="true">worne</orth>
+                </form>
+            </form>
+            <gramGrp>
+                <pos>v</pos>
+            </gramGrp>
+            <sense>
+                <cit type="trans" xml:lang="tr">
+                <quote>giymek</quote>
+                <quote>takmak</quote>
+                </cit>
+                <sense>
+                <def>to have on (clothes)</def>
+                </sense>
+            </sense>
+        </entry>
+        <entry>
             <form>
                 <orth>go on</orth>
                 <form type="infl">
@@ -29,6 +77,24 @@
                 </cit>
                 <sense>
                 <def>happen</def>
+                </sense>
+            </sense>
+        </entry>
+        <entry>
+            <form>
+                <orth>ability</orth>
+                <pron>/əˈbɪl.ə.ti/</pron>
+            </form>
+            <gramGrp>
+                <pos>suffix</pos>
+            </gramGrp>
+            <sense>
+                <cit type="trans" xml:lang="tr">
+                <quote>abilite</quote>
+                <quote>bilirlik</quote>
+                </cit>
+                <sense>
+                <def>Forms a noun from a verb</def>
                 </sense>
             </sense>
         </entry>
