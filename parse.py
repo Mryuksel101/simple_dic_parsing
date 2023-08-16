@@ -8,6 +8,13 @@ entry_elements = root.findall(".//{http://www.tei-c.org/ns/1.0}entry")
 index = 0
 lookedUpWords = []
 wordName = "empty"
+def addQuoteOrQuotesForMultipleMeaning(quoteList : list):
+    if 1 == len(quoteList):
+        simple_dictionary["words"][-1]["definitions"][-1]["transition"] = quoteList[0].text
+    else:
+        simple_dictionary["words"][-1]["definitions"][-1]["transitions"] = [] 
+        for b in quoteList:
+            simple_dictionary["words"][-1]["definitions"][-1]["transitions"].append(b.text)
 def addQuoteOrQuotes( quoteList : list):
     if 1 == len(quoteList):
         simple_dictionary["words"][-1]["transition"] = quoteList[0].text
@@ -92,7 +99,7 @@ for entry in entry_elements:
                     else:
                         addMapToDefinitions()
                         quoteBox = senseler[sayi].findall(".//{http://www.tei-c.org/ns/1.0}quote")
-                        addQuoteOrQuotes(quoteBox)
+                        addQuoteOrQuotesForMultipleMeaning(quoteBox)
 
                         print("deneme")
                     sayi = sayi + 1
