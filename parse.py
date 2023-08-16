@@ -68,9 +68,9 @@ for entry in entry_elements:
         addWordNameToMap()
         if(wordMeaningCount==1): # kelimenin sadece bir anlamı varsa
             getWordTypeForOneMeaninWords()
-            addWordDefinition()
             cits = sameWordsBox[0].findall(".//{http://www.tei-c.org/ns/1.0}cit")
             if 1 == len(cits):
+                addWordDefinition()
                 # cits birden fazla ise birden fazla anlam vardır
                 # bazen kelimenin sadece bir anlamı olsa da birden fazla fiil veya birden fazla sıfat anlamı olabilir.
 
@@ -84,7 +84,6 @@ for entry in entry_elements:
                 # 0,2 gibi çift sayılarda quote'ya, 1,3 gibi tek sayılarda def'e odaklanacağız
                 # çünkü yok var yok var şeklinde gidiyor
                 addDefinitions()
-                addMapToDefinitions()
                 sayi = 0
                 for b in senseler:
                     if sayi % 2 == 1:
@@ -92,7 +91,7 @@ for entry in entry_elements:
                         addValueToDefinitions(definition)
                     else:
                         addMapToDefinitions()
-                        quoteBox = b[sayi].findall(".//{http://www.tei-c.org/ns/1.0}quote")
+                        quoteBox = senseler[sayi].findall(".//{http://www.tei-c.org/ns/1.0}quote")
                         addQuoteOrQuotes(quoteBox)
 
                         print("deneme")
