@@ -8,8 +8,10 @@ entry_elements = root.findall(".//{http://www.tei-c.org/ns/1.0}entry")
 index = 0
 lookedUpWords = []
 wordName = "empty"
-def getTranslationforOneMeaningWords():
-    simple_dictionary["words"][-1]["translation"] = sameWordsBox[0].find(".//{http://www.tei-c.org/ns/1.0}quote").text
+
+def addWordDefinition():
+    definition = sameWordsBox[0].find(".//{http://www.tei-c.org/ns/1.0}def").text
+    simple_dictionary["words"][-1]["definition"] = definition
 def getWordTypeForOneMeaninWords():
     simple_dictionary["words"][-1]["type"] = sameWordsBox[0].find(".//{http://www.tei-c.org/ns/1.0}pos").text
 
@@ -21,7 +23,7 @@ def addPolysemanticKeyToArray():
     if wordMeaningCount==1:
        print
     else:
-         simple_dictionary["words"][-1]["polysemantic"] = []
+        simple_dictionary["words"][-1]["polysemantic"] = []
 def increaseTheIndex():
     global index  # global değişkeni kullanacağımızı belirtiyoruz
     index = index + 1
@@ -53,21 +55,31 @@ for entry in entry_elements:
         addWordNameToMap()
         if(wordMeaningCount==1): # kelimenin sadece bir anlamı varsa
             getWordTypeForOneMeaninWords()
-            getTranslationforOneMeaningWords()
-            # bazen kelimenin sadece bir anlamı olsa da birden fazla fiil veya birden fazla sıfat anlamı olabilir.
+            addWordDefinition()
             cits = sameWordsBox[0].findall(".//{http://www.tei-c.org/ns/1.0}cit")
-            # cits birden fazla ise birden fazla anlam vardır
             if 1 == len(cits):
-                print
+                # cits birden fazla ise birden fazla anlam vardır
+                # bazen kelimenin sadece bir anlamı olsa da birden fazla fiil veya birden fazla sıfat anlamı olabilir.
+
+                #kelimenin kaç tane çevirisi var
+                quoteBox = cits[0].findall(".//{http://www.tei-c.org/ns/1.0}quote")
+                if 1 == len(quoteBox):
+                    simple_dictionary["words"][-1]["transition"] = quoteBox[0].text
+                else:
+                    simple_dictionary["words"][-1]["transitions"] = []
+                    for b in quoteBox:
+                        simple_dictionary["words"][-1]["transitions"].append(b.text)
+
             else:
-                print
-            senseler = sameWordsBox[0].findall(".//{http://www.tei-c.org/ns/1.0}sense")
-            # senseler dizinde işimize yarayacak olan dizideki indekler tek basamaklı sayılardır
-            # çünkü yok var yok var şeklinde gidiyor
-            sayi = 1
-            for b in senseler:
-                b.find(".//{http://www.tei-c.org/ns/1.0}def").text
-                sayi = sayi+2
+                senseler = sameWordsBox[0].findall(".//{http://www.tei-c.org/ns/1.0}sense")
+                # senseler kelime anlamı için lazım
+                # senseler dizinde işimize yarayacak olan dizideki indekler tek basamaklı sayılardır
+                # çünkü yok var yok var şeklinde gidiyor
+                sayi = 1
+                for b in senseler:
+                    b.find(".//{http://www.tei-c.org/ns/1.0}def").text
+                    sayi = sayi+2
+            
 
 
            
@@ -87,4 +99,4 @@ simple_dictionary["words"][-1]["type"] = pos_element.text
 simple_dictionary["words"][-1]["polysemantic"] = pos_element.text
 print(simple_dictionary)
 '''
-#print(simple_dictionary)
+print(simple_dictionary)
