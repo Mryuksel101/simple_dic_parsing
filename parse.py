@@ -6,43 +6,50 @@ simple_dictionary = {}
 simple_dictionary["words"] = []
 entry_elements = root.findall(".//{http://www.tei-c.org/ns/1.0}entry")
 index = 0
-wordName = "deneme"
+lookedUpWords = []
+wordName = "empty"
+def addLookedUpWords():
+    lookedUpWords.append(wordName)
 def addPolysemanticKeyToArray():
     simple_dictionary["words"][-1]["polysemantic"] = []
 def increaseTheIndex():
     global index  # global değişkeni kullanacağımızı belirtiyoruz
     index = index + 1
-def getNextIndex():
-    nextIndex = index + 1
-    return nextIndex
 def addEmtyMaptoArray():
     simple_dictionary["words"].append({})
 def getWordName(entry):
+    global wordName
     wordName =  entry.find(".//{http://www.tei-c.org/ns/1.0}orth").text
     print(wordName)
     simple_dictionary["words"][-1]["word"] = wordName
-def getNextWordName():
-    nextEntry = entry_elements[getNextIndex()]
-    nextwordName =  nextEntry.find(".//{http://www.tei-c.org/ns/1.0}orth").text
-    return nextwordName
 
 for entry in entry_elements:
     addEmtyMaptoArray()
     getWordName(entry)
+    wordMeaningCount = 0
+    
     """
     bazı kelimeler aynı yazıldığı halde birden çok anlama sahip oluyor.
-    bundan bir sonraki index'teki elementin ismi bu index'teki elementin ismiyle uyuşuyor mu kontrol et.
-    Eğer uyuşuyor ise kelimenin birden fazla anlamı var demektir
+    bütün veriyi kontrol edip aynı isme sahip kaç tane kelime var kontrol et
     """
-    if wordName == getNextWordName() : 
-        print("kelimenin birden fazla anlamı var")
-        addPolysemanticKeyToArray()
-    else:
-        print("kelimenin birden fazla anlamı yok")    
-    
-    increaseTheIndex()
+    if wordName not in lookedUpWords:
+        addLookedUpWords()
+        for i in entry_elements:
+            if(wordName)== i.find(".//{http://www.tei-c.org/ns/1.0}orth").text:
+                print("kelime eşleşti")
+                wordMeaningCount = wordMeaningCount + 1
+
+            else:
+                print("kelime işleşmedi")
+   
+    print(wordName + "için" + str(wordMeaningCount) + "kelime anlamı var")
+
+
+'''  increaseTheIndex()
 orth_element = root.find(".//{http://www.tei-c.org/ns/1.0}orth")
 pos_element = root.find(".//{http://www.tei-c.org/ns/1.0}pos")
 simple_dictionary["words"][-1]["type"] = pos_element.text
 simple_dictionary["words"][-1]["polysemantic"] = pos_element.text
 print(simple_dictionary)
+'''
+print(lookedUpWords)
