@@ -48,6 +48,24 @@
                 </sense>
             </sense>
         </entry>
+        <entry>
+            <form>
+                <orth>ability</orth>
+                <pron>/əˈbɪl.ə.ti/</pron>
+            </form>
+            <gramGrp>
+                <pos>suffix</pos>
+            </gramGrp>
+            <sense>
+                <cit type="trans" xml:lang="tr">
+                <quote>abilite</quote>
+                <quote>bilirlik</quote>
+                </cit>
+                <sense>
+                <def>Forms a noun from a verb</def>
+                </sense>
+            </sense>
+        </entry>
     </text>
 </TEI>
 
