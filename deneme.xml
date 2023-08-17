@@ -48,56 +48,6 @@
                 </sense>
             </sense>
         </entry>
-        <entry>
-            <form>
-                <orth>go on</orth>
-                <form type="infl">
-                <orth>go oning</orth>
-                <orth>go ons</orth>
-                <orth wikdict:show="true">go oned</orth>
-                </form>
-            </form>
-            <gramGrp>
-                <pos>v</pos>
-            </gramGrp>
-            <sense>
-                <cit type="trans" xml:lang="tr">
-                    <quote>devam etmek</quote>
-                    <quote>sürmek</quote>
-                </cit>
-                <sense>
-                <def>continue</def>
-                </sense>
-            </sense>
-            <sense>
-                <cit type="trans" xml:lang="tr">
-                    <quote>dönmek</quote>
-                    <quote>gerçekleşmek</quote>
-                    <quote>olmak</quote>
-                </cit>
-                <sense>
-                <def>happen</def>
-                </sense>
-            </sense>
-        </entry>
-        <entry>
-            <form>
-                <orth>ability</orth>
-                <pron>/əˈbɪl.ə.ti/</pron>
-            </form>
-            <gramGrp>
-                <pos>suffix</pos>
-            </gramGrp>
-            <sense>
-                <cit type="trans" xml:lang="tr">
-                <quote>abilite</quote>
-                <quote>bilirlik</quote>
-                </cit>
-                <sense>
-                <def>Forms a noun from a verb</def>
-                </sense>
-            </sense>
-        </entry>
     </text>
 </TEI>
 
