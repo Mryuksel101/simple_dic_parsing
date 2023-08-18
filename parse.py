@@ -3,7 +3,6 @@ with open("C:/Users/Mustafa Yüksel/Desktop/simple_dic_parsing/deneme.xml", "r",
     xml_text = file.read()
 root = ET.fromstring(xml_text)
 simple_dictionary = {}
-simple_dictionary["words"] = []
 entry_elements = root.findall(".//{http://www.tei-c.org/ns/1.0}entry")
 index = 0
 lookedUpWords = []
@@ -12,16 +11,16 @@ def getCitsElements(element):
     getCitsElements = element.findall(".//{http://www.tei-c.org/ns/1.0}cit")
     return getCitsElements
 
-def addItemsToMap(myDic: dict, entryElement):
+def addItemsToMap(entryElement):
     citsElements = getCitsElements(entryElement)
     if 1 == len(citsElements):
-                addWordDefinition(entryElement, myDic)
+                addWordDefinition(entryElement)
                 # cits birden fazla ise birden fazla anlam vardır
                 # bazen kelimenin sadece bir anlamı olsa da birden fazla fiil veya birden fazla sıfat anlamı olabilir.
 
                 #kelimenin kaç tane çevirisi var
                 quoteBox = citsElements[0].findall(".//{http://www.tei-c.org/ns/1.0}quote")
-                addQuoteOrQuotes(quoteBox, myDic)
+                addQuoteOrQuotes(quoteBox)
 
     else:
         senseler = entryElement.findall(".//{http://www.tei-c.org/ns/1.0}sense")
@@ -43,45 +42,43 @@ def addItemsToMap(myDic: dict, entryElement):
             sayi = sayi + 1
 def addQuoteOrQuotesForMultipleMeaning(quoteList : list):
     if 1 == len(quoteList):
-        simple_dictionary["words"][-1]["definitions"][-1]["transition"] = quoteList[0].text
+        simple_dictionary[wordName]["definitions"][-1]["transition"] = quoteList[0].text
     else:
-        simple_dictionary["words"][-1]["definitions"][-1]["transitions"] = [] 
+        simple_dictionary[wordName]["definitions"][-1]["transitions"] = [] 
         for b in quoteList:
-            simple_dictionary["words"][-1]["definitions"][-1]["transitions"].append(b.text)
-def addQuoteOrQuotes( quoteList : list, map:dict):
+            simple_dictionary[wordName]["definitions"][-1]["transitions"].append(b.text)
+def addQuoteOrQuotes( quoteList : list,):
     if 1 == len(quoteList):
-        map["transition"] = quoteList[0].text
+        simple_dictionary[wordName]["transition"] = quoteList[0].text
     else:
-        map["transitions"] = []
+        simple_dictionary[wordName]["transitions"] = []
         for b in quoteList:
-            map["transitions"].append(b.text)
+            simple_dictionary[wordName]["transitions"].append(b.text)
 
 def addValueToDefinitions(value:str):
-    simple_dictionary["words"][-1]["definitions"][-1]["definition"] = value
+    simple_dictionary[wordName]["definitions"][-1]["definition"] = value
 def addMapToDefinitions():
-    simple_dictionary["words"][-1]["definitions"].append({})
+    simple_dictionary[wordName]["definitions"].append({})
 def addDefinitions():
-    simple_dictionary["words"][-1]["definitions"] = []
-def addWordDefinition(element, map:dict):
+    simple_dictionary[wordName]["definitions"] = []
+def addWordDefinition(element,):
+    global wordName
     definition = element.find(".//{http://www.tei-c.org/ns/1.0}def").text
-    map["definition"] = definition
-def getWordType(value : dict, element):
-    value["type"] = element.find(".//{http://www.tei-c.org/ns/1.0}pos").text
+    simple_dictionary[wordName]["definition"] = definition
+def getWordType(element):
+    simple_dictionary[wordName]["type"] = element.find(".//{http://www.tei-c.org/ns/1.0}pos").text
 
 def addWordNameToMap():
-    simple_dictionary["words"][-1]["word"] = wordName
+    simple_dictionary[wordName]["word"] = wordName
 def addLookedUpWords():
     lookedUpWords.append(wordName)
-def addPolysemanticKeyToArray():
-    if wordMeaningCount==1:
-       print
-    else:
-        simple_dictionary["words"][-1]["polysemantic"] = []
 def increaseTheIndex():
     global index  # global değişkeni kullanacağımızı belirtiyoruz
     index = index + 1
-def addEmtyMaptoArray(data : dict):
-    data.append({})
+def addEmtyMaptoMap():
+    global simple_dictionary 
+    simple_dictionary = {wordName: {}}
+    #simple_dictionary[wordName] = dict(),
 def getWordName(entry):
     global wordName
     wordName =  entry.find(".//{http://www.tei-c.org/ns/1.0}orth").text
@@ -95,26 +92,27 @@ for entry in entry_elements:
     bütün veriyi kontrol edip aynı isme sahip kaç tane kelime var kontrol et
     """
     if wordName not in lookedUpWords:
-        addEmtyMaptoArray(simple_dictionary["words"])
+        #addEmtyMaptoMap()
         addLookedUpWords()
         sameWordsBox = []
         for i in entry_elements:
+            simple_dictionary[wordName] = {}
             if(wordName)== i.find(".//{http://www.tei-c.org/ns/1.0}orth").text: # kelimemeiz x diyelim. bütün datada kaç tane x var ona bakıyoruz
                 print("kelime eşleşti")
                 wordMeaningCount = wordMeaningCount + 1
                 sameWordsBox.append(i)
             else:
                 print("kelime işleşmedi")
-        addWordNameToMap()
+        #addWordNameToMap()
         if(wordMeaningCount==1): # kelimenin sadece bir anlamı varsa
-            getWordType(simple_dictionary["words"][-1], sameWordsBox[0])
-            addItemsToMap(simple_dictionary["words"][-1], sameWordsBox[0])
+            getWordType(sameWordsBox[0])
+            addItemsToMap(sameWordsBox[0])
         else:
-            simple_dictionary["words"][-1]["polysemy"] = []
+            simple_dictionary[wordName]["polysemy"] = []
             for sameWord in sameWordsBox:
-                addEmtyMaptoArray(simple_dictionary["words"][-1]["polysemy"])
-                getWordType(simple_dictionary["words"][-1]["polysemy"][-1], sameWord)
-                addItemsToMap(simple_dictionary["words"][-1]["polysemy"][-1],sameWord)
+                simple_dictionary[wordName]["polysemy"].append({})
+                simple_dictionary[wordName]["polysemy"][-1]["type"] = sameWord.find(".//{http://www.tei-c.org/ns/1.0}pos").text
+                #addItemsToMap(sameWord)
 
                 
             
