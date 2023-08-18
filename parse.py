@@ -11,13 +11,13 @@ def getCitsElements(element):
     getCitsElements = element.findall(".//{http://www.tei-c.org/ns/1.0}cit")
     return getCitsElements
 
-def addItemsToMap(entryElement):
+def addItemsToMap(entryElement,):
     citsElements = getCitsElements(entryElement)
     if 1 == len(citsElements):
                 addWordDefinition(entryElement)
-                # cits birden fazla ise birden fazla anlam vardır
-                # bazen kelimenin sadece bir anlamı olsa da birden fazla fiil veya birden fazla sıfat anlamı olabilir.
-
+                # cits birden fazla ise birden fazla anlam vardır.
+                # typelar ortak def[{ definition transitions ayrı mapte tutulur}]
+                #  
                 #kelimenin kaç tane çevirisi var
                 quoteBox = citsElements[0].findall(".//{http://www.tei-c.org/ns/1.0}quote")
                 addQuoteOrQuotes(quoteBox)
@@ -42,29 +42,58 @@ def addItemsToMap(entryElement):
             sayi = sayi + 1
 def addQuoteOrQuotesForMultipleMeaning(quoteList : list):
     if 1 == len(quoteList):
-        simple_dictionary[wordName]["definitions"][-1]["transition"] = quoteList[0].text
+        if duoWords:
+            simple_dictionary[wordName]["polysemy"][-1]["transition"] = quoteList[0].text
+        else:
+            simple_dictionary[wordName]["definitions"][-1]["transition"] = quoteList[0].text
     else:
-        simple_dictionary[wordName]["definitions"][-1]["transitions"] = [] 
-        for b in quoteList:
-            simple_dictionary[wordName]["definitions"][-1]["transitions"].append(b.text)
+        if duoWords:
+            simple_dictionary[wordName]["polysemy"][-1]["definitions"][-1]["transitions"] = []
+            for b in quoteList:
+                simple_dictionary[wordName]["polysemy"][-1]["definitions"][-1]["transitions"].append(b.text)
+        else:
+            simple_dictionary[wordName]["definitions"][-1]["transitions"] = [] 
+            for b in quoteList:
+                simple_dictionary[wordName]["definitions"][-1]["transitions"].append(b.text)
 def addQuoteOrQuotes( quoteList : list,):
     if 1 == len(quoteList):
-        simple_dictionary[wordName]["transition"] = quoteList[0].text
+        if duoWords:
+            simple_dictionary[wordName]["polysemy"][-1]["transition"] = quoteList[0].text
+        else:
+            simple_dictionary[wordName]["transition"] = quoteList[0].text
     else:
-        simple_dictionary[wordName]["transitions"] = []
-        for b in quoteList:
-            simple_dictionary[wordName]["transitions"].append(b.text)
+        if duoWords:
+            simple_dictionary[wordName]["polysemy"][-1]["transitions"] = []
+            for b in quoteList:
+                simple_dictionary[wordName]["polysemy"][-1]["transitions"].append(b.text)
+
+        else:
+            simple_dictionary[wordName]["transitions"] = []
+            for b in quoteList:
+                simple_dictionary[wordName]["transitions"].append(b.text)
 
 def addValueToDefinitions(value:str):
-    simple_dictionary[wordName]["definitions"][-1]["definition"] = value
+    if duoWords:
+        simple_dictionary[wordName]["polysemy"][-1]["definitions"][-1]["definition"] = value
+    else:
+        simple_dictionary[wordName]["definitions"][-1]["definition"] = value
 def addMapToDefinitions():
-    simple_dictionary[wordName]["definitions"].append({})
+    if duoWords:
+        simple_dictionary[wordName]["polysemy"][-1]["definitions"].append({})
+    else:
+        simple_dictionary[wordName]["definitions"].append({})
 def addDefinitions():
-    simple_dictionary[wordName]["definitions"] = []
+    if duoWords:
+        simple_dictionary[wordName]["polysemy"][-1]["definitions"]=[]
+    else:
+        simple_dictionary[wordName]["definitions"] = []
 def addWordDefinition(element,):
     global wordName
     definition = element.find(".//{http://www.tei-c.org/ns/1.0}def").text
-    simple_dictionary[wordName]["definition"] = definition
+    if duoWords:
+        simple_dictionary[wordName]["polysemy"][-1]["definition"] = definition
+    else:
+        simple_dictionary[wordName]["definition"] = definition
 def getWordType(element):
     simple_dictionary[wordName]["type"] = element.find(".//{http://www.tei-c.org/ns/1.0}pos").text
 
@@ -92,6 +121,7 @@ for entry in entry_elements:
     bütün veriyi kontrol edip aynı isme sahip kaç tane kelime var kontrol et
     """
     if wordName not in lookedUpWords:
+        duoWords = False
         #addEmtyMaptoMap()
         addLookedUpWords()
         sameWordsBox = []
@@ -108,11 +138,12 @@ for entry in entry_elements:
             getWordType(sameWordsBox[0])
             addItemsToMap(sameWordsBox[0])
         else:
+            duoWords = True
             simple_dictionary[wordName]["polysemy"] = []
             for sameWord in sameWordsBox:
                 simple_dictionary[wordName]["polysemy"].append({})
                 simple_dictionary[wordName]["polysemy"][-1]["type"] = sameWord.find(".//{http://www.tei-c.org/ns/1.0}pos").text
-                #addItemsToMap(sameWord)
+                addItemsToMap(sameWord)
 
                 
             
