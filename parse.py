@@ -7,6 +7,18 @@ entry_elements = root.findall(".//{http://www.tei-c.org/ns/1.0}entry")
 index = 0
 lookedUpWords = []
 wordName = "empty"
+def addInflection(element):
+    #  simple_dictionary[wordName]["polysemy"]
+    orthElements = element.findall(".//{http://www.tei-c.org/ns/1.0}orth")
+    if len(orthElements)>1:
+        if duoWords:
+            simple_dictionary[wordName]["polysemy"][-1]["inflection"] = []
+            for orth in orthElements:
+                simple_dictionary[wordName]["polysemy"][-1]["inflection"].append(orth.text)
+        else:
+            simple_dictionary[wordName]["inflection"] = []
+            for orth in orthElements:
+                simple_dictionary[wordName]["inflection"].append(orth.text)
 def getCitsElements(element):
     getCitsElements = element.findall(".//{http://www.tei-c.org/ns/1.0}cit")
     return getCitsElements
@@ -135,6 +147,7 @@ for entry in entry_elements:
                 print("kelime işleşmedi")
         #addWordNameToMap()
         if(wordMeaningCount==1): # kelimenin sadece bir anlamı varsa
+            addInflection(entry)
             getWordType(sameWordsBox[0])
             addItemsToMap(sameWordsBox[0])
         else:
@@ -144,6 +157,7 @@ for entry in entry_elements:
                 simple_dictionary[wordName]["polysemy"].append({})
                 simple_dictionary[wordName]["polysemy"][-1]["type"] = sameWord.find(".//{http://www.tei-c.org/ns/1.0}pos").text
                 addItemsToMap(sameWord)
+                addInflection(sameWord)
 
                 
             
